@@ -20,3 +20,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+file = FOREACH u GENERATE $3,ToDate($3,'yyyy-MM-dd');
+file = FOREACH file GENERATE $0, GetYear($1);
+file = GROUP file BY $1;
+file = FOREACH file GENERATE $0, COUNT(file);
+STORE file INTO 'output' USING PigStorage(',');
